@@ -1,6 +1,3 @@
-// =============================
-// App.js (FULL VERSION)
-// =============================
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -8,6 +5,10 @@ import {
   TextInput, ScrollView, KeyboardAvoidingView, Platform
 } from 'react-native';
 
+import HomeScreen from './screens/HomeScreen';
+import ProductDetailScreen from './screens/ProductDetailScreen';
+import ExploreScreen from './screens/ExploreScreen';
+import BeveragesScreen from './screens/BeveragesScreen';
 export default function App() {
   const [screen, setScreen] = useState('splash');
 
@@ -36,6 +37,21 @@ export default function App() {
           onBack={() => setScreen('signin')}
         />
       )}
+      {screen === 'home' && <HomeScreen setScreen={setScreen} />}
+      {screen === 'productDetail' && (
+        <ProductDetailScreen onBack={() => setScreen('home')} />
+      )}
+      {screen === 'explore' && (
+        <ExploreScreen
+          onNavigate={setScreen}   // 👈 THÊM DÒNG NÀY
+          onSelectCategory={(cat) => {
+            if (cat.name.includes('Beverages')) setScreen('beverages');
+          }}
+        />
+      )}
+      {screen === 'beverages' && (
+        <BeveragesScreen onBack={() => setScreen('explore')} />
+      )}
       {screen === 'otp' && (
         <VerificationScreen
           onBack={() => setScreen('number')}
@@ -50,7 +66,7 @@ export default function App() {
       )}
       {screen === 'login' && (
         <LoginScreen
-          onNext={() => setScreen('selectLocation')}
+          onNext={() => setScreen('home')}   // 👈 QUAN TRỌNG
           onBack={() => setScreen('selectLocation')}
           onSignUp={() => setScreen('signup')}
         />
@@ -218,7 +234,7 @@ function SelectLocationScreen({ onNext, onBack }) {
 
         {/* Map image */}
         <Image
-          source={require('./assets/Mask Group.png')}
+          source={require('./assets/illustration.png')}
           style={styles.mapImage}
           resizeMode="contain"
         />
@@ -256,8 +272,8 @@ function SelectLocationScreen({ onNext, onBack }) {
 // =============================
 // Login Screen
 // =============================
-function LoginScreen({ onBack, onSignUp }) {
-  const [email, setEmail] = useState('imshuvo97@gmail.com');
+function LoginScreen({ onBack, onSignUp, onNext }) {
+  const [email, setEmail] = useState('Nguyễn Văn Huy');
   const [password, setPassword] = useState('········');
   const [showPass, setShowPass] = useState(false);
 
@@ -306,7 +322,10 @@ function LoginScreen({ onBack, onSignUp }) {
         </TouchableOpacity>
 
         {/* Log In button */}
-        <TouchableOpacity style={styles.primaryBtn}>
+        <TouchableOpacity
+          style={styles.primaryBtn}
+          onPress={onNext}
+        >
           <Text style={styles.primaryBtnText}>Log In</Text>
         </TouchableOpacity>
 
@@ -326,7 +345,7 @@ function LoginScreen({ onBack, onSignUp }) {
 // Sign Up Screen
 // =============================
 function SignUpScreen({ onBack, onLogin }) {
-  const [username, setUsername] = useState('Afsar Hossen Shuvo');
+  const [username, setUsername] = useState('Nguyễn Văn Huy');
   const [email, setEmail] = useState('imshuvo97@gmail.com');
   const [password, setPassword] = useState('········');
   const [showPass, setShowPass] = useState(false);
